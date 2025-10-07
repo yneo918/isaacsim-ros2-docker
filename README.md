@@ -86,10 +86,30 @@ source install/setup.bash
 
 ### Isaac Sim の GUI アクセス
 
-デフォルトではヘッドレスモード（WebRTC）で動作します。
+デフォルトではヘッドレスモード（WebRTC ストリーミング）で動作します。
 
-- **WebRTC ストリーミング**: ブラウザで Omniverse Streaming Client にアクセス
-- **ローカル X11**: `scripts/run_isaac.sh:14` の `runheadless.sh` を `runapp.sh` に変更
+#### WebRTC ストリーミングクライアント
+
+1. **クライアントのダウンロード**:
+   - [Isaac Sim WebRTC Streaming Client](https://docs.isaacsim.omniverse.nvidia.com/5.0.0/installation/manual_livestream_clients.html) をダウンロード
+   - Linux: Ubuntu 22.04+ では `libfuse2` が必要
+     ```bash
+     sudo apt install libfuse2
+     ```
+
+2. **接続方法**:
+   - Isaac Sim コンテナが起動し、"Isaac Sim Full Streaming App is loaded" メッセージを確認
+   - Streaming Client を起動
+   - サーバーアドレスに `127.0.0.1` を入力（localhost の場合）
+   - "Connect" をクリック
+
+3. **ネットワーク設定**:
+   - UDP ポート 47998 と TCP ポート 49100 を開放
+   - リモート接続の場合はホストの IP アドレスを指定
+
+#### ローカル X11 GUI
+
+`scripts/run_isaac.sh:14` の `runheadless.sh` を `runapp.sh` に変更してコンテナを再起動
 
 ## 環境の停止
 
@@ -107,6 +127,12 @@ docker run --rm --runtime=nvidia nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
 
 ### ROS 2 ノードが見えない
 `ROS_DOMAIN_ID` が両コンテナで一致しているか `.env` を確認してください。
+
+## 参考資料
+
+このセットアップは以下の公式ドキュメントを参考に作成されています:
+- [Isaac Sim Container Installation](https://docs.isaacsim.omniverse.nvidia.com/5.0.0/installation/install_container.html)
+- [Isaac Sim LiveStreaming Clients](https://docs.isaacsim.omniverse.nvidia.com/5.0.0/installation/manual_livestream_clients.html)
 
 ## ライセンス
 
