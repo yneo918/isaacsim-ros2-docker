@@ -3,6 +3,7 @@
 
 # Docker 生成ファイルと永続ボリューム
 _work/
+_ros2_ws/
 
 # IDE / エディタ
 .vscode/
@@ -14,3 +15,6 @@ _work/
 
 # OS
 Thumbs.db
+
+# AppImage
+*.AppImage

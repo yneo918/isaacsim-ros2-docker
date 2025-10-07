@@ -30,6 +30,9 @@ NVIDIA Isaac Sim と ROS 2 を Docker で統合する環境です。
 
    # 永続ボリュームのベースディレクトリ
    HOST_BASE=./_work
+
+   # ROS 2 ワークスペース
+   ROS2_WORKSPACE=./_ros2_ws
    ```
 
 2. 環境を起動:
@@ -67,6 +70,18 @@ ROS 2 コンテナ内で:
 source /opt/ros/humble/setup.bash
 ros2 topic list
 ros2 topic echo /chatter
+```
+
+### ROS 2 ワークスペースでの開発
+
+ホスト側の `./_ros2_ws` ディレクトリがコンテナ内の `/root/ros2_ws` にマウントされます。
+
+ROS 2 コンテナ内でパッケージをビルド:
+```bash
+cd /root/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build
+source install/setup.bash
 ```
 
 ### Isaac Sim の GUI アクセス

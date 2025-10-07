@@ -37,6 +37,8 @@ services:
       ROS_DOMAIN_ID: "${ROS_DOMAIN_ID}"
     volumes:
       - ./scripts/ros2_demo.sh:/root/ros2_demo.sh:ro
+      - "${ROS2_WORKSPACE}:/root/ros2_ws:rw"
+      - ./_bash/.bashrc:/root/.bashrc:ro
     depends_on:
       - isaac-sim
 
