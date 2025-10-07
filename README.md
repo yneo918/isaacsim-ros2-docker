@@ -35,7 +35,14 @@ NVIDIA Isaac Sim と ROS 2 を Docker で統合する環境です。
    ROS2_WORKSPACE=./_ros2_ws
    ```
 
-2. 環境を起動:
+2. ワークスペースディレクトリを作成:
+   ```bash
+   bash scripts/setup_workspace.sh
+   ```
+
+   このスクリプトは `_work` と `_ros2_ws` ディレクトリを現在のユーザー権限で事前作成します。これにより Docker が root 権限で作成するのを防ぎます。
+
+3. 環境を起動:
    ```bash
    docker compose up -d
    ```
