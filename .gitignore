@@ -1,0 +1,16 @@
+# 環境変数ファイル（機密情報を含む可能性があるため）
+.env
+
+# Docker 生成ファイルと永続ボリューム
+_work/
+
+# IDE / エディタ
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db

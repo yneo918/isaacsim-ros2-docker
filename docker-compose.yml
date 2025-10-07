@@ -1,0 +1,42 @@
+services:
+  isaac-sim:
+    image: "${ISAAC_SIM_IMAGE}"
+    container_name: isaac-sim
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    network_mode: host
+    environment:
+      ACCEPT_EULA: "Y"
+      PRIVACY_CONSENT: "Y"
+      ROS_DOMAIN_ID: "${ROS_DOMAIN_ID}"
+      DISPLAY: "${DISPLAY}"
+    env_file: .env
+    entrypoint: ["/bin/bash", "/root/run_isaac_entrypoint.sh"]
+    volumes:
+      - ./scripts/run_isaac.sh:/root/run_isaac_entrypoint.sh:ro
+      - "${HOST_BASE}/cache/kit:/isaac-sim/kit/cache:rw"
+      - "${HOST_BASE}/cache/ov:/root/.cache/ov:rw"
+      - "${HOST_BASE}/cache/pip:/root/.cache/pip:rw"
+      - "${HOST_BASE}/cache/glcache:/root/.cache/nvidia/GLCache:rw"
+      - "${HOST_BASE}/cache/computecache:/root/.nv/ComputeCache:rw"
+      - "${HOST_BASE}/logs:/root/.nvidia-omniverse/logs:rw"
+      - "${HOST_BASE}/data:/root/.local/share/ov/data:rw"
+      - "${HOST_BASE}/documents:/root/Documents:rw"
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+  ros2:
+    image: "${ROS2_IMAGE}"
+    container_name: ros2
+    network_mode: host
+    command: ["bash", "-lc", "sleep infinity"]
+    environment:
+      ROS_DOMAIN_ID: "${ROS_DOMAIN_ID}"
+    volumes:
+      - ./scripts/ros2_demo.sh:/root/ros2_demo.sh:ro
+    depends_on:
+      - isaac-sim
+

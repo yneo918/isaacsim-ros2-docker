@@ -1,1 +1,98 @@
 # isaacsim-ros2-docker
+
+NVIDIA Isaac Sim と ROS 2 を Docker で統合する環境です。
+
+## 概要
+
+このリポジトリは、NVIDIA Isaac Sim 5.0.0 と ROS 2 Humble を Docker Compose で連携させるセットアップを提供します。
+
+### 構成
+
+- **isaac-sim コンテナ**: Isaac Sim をヘッドレスモード（WebRTC ストリーミング）で実行し、ROS 2 ブリッジ拡張を有効化
+- **ros2 コンテナ**: ROS 2 Humble 環境で Isaac Sim と通信
+
+## 必要な環境
+
+- Docker と Docker Compose
+- NVIDIA GPU と NVIDIA Container Toolkit（nvidia-docker2）
+- （オプション）ローカル GUI の場合は X11
+
+## セットアップ
+
+1. `.env` ファイルで設定を確認・編集:
+   ```bash
+   # Isaac Sim と ROS 2 のバージョン
+   ISAAC_SIM_IMAGE=nvcr.io/nvidia/isaac-sim:5.0.0
+   ROS2_IMAGE=ros:humble-ros-base
+
+   # ROS_DOMAIN_ID（両コンテナで一致させる）
+   ROS_DOMAIN_ID=0
+
+   # 永続ボリュームのベースディレクトリ
+   HOST_BASE=./_work
+   ```
+
+2. 環境を起動:
+   ```bash
+   docker compose up -d
+   ```
+
+## 使い方
+
+### コンテナへのアクセス
+
+Isaac Sim コンテナ:
+```bash
+docker exec -it isaac-sim bash
+```
+
+ROS 2 コンテナ:
+```bash
+docker exec -it ros2 bash
+```
+
+### ROS 2 デモの実行
+
+ROS 2 コンテナ内で:
+```bash
+bash /root/ros2_demo.sh
+```
+
+このスクリプトは demo talker ノードを起動し、トピックリストを表示します。
+
+### ROS 2 トピックの確認
+
+ROS 2 コンテナ内で:
+```bash
+source /opt/ros/humble/setup.bash
+ros2 topic list
+ros2 topic echo /chatter
+```
+
+### Isaac Sim の GUI アクセス
+
+デフォルトではヘッドレスモード（WebRTC）で動作します。
+
+- **WebRTC ストリーミング**: ブラウザで Omniverse Streaming Client にアクセス
+- **ローカル X11**: `scripts/run_isaac.sh:14` の `runheadless.sh` を `runapp.sh` に変更
+
+## 環境の停止
+
+```bash
+docker-compose down
+```
+
+## トラブルシューティング
+
+### GPU が認識されない
+NVIDIA Container Toolkit が正しくインストールされているか確認:
+```bash
+docker run --rm --runtime=nvidia nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
+```
+
+### ROS 2 ノードが見えない
+`ROS_DOMAIN_ID` が両コンテナで一致しているか `.env` を確認してください。
+
+## ライセンス
+
+このプロジェクトは MIT ライセンスの下で提供されています。詳細は LICENSE ファイルをご覧ください。
